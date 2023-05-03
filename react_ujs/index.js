@@ -9,6 +9,7 @@ var constructorFromRequireContextWithGlobalFallback = require("./src/getConstruc
 var constructorFromRequireContextsWithGlobalFallback = require("./src/getConstructor/fromRequireContextsWithGlobalFallback")
 var { supportsHydration, reactHydrate, createReactRootLike } = require("./src/renderHelpers")
 var supportsRootApi = require("./src/supportsRootApi")
+var { replaceNullWithUndefined } = require("./src/options")
 
 var ReactRailsUJS = {
   // This attribute holds the name of component which should be mounted
@@ -32,6 +33,11 @@ var ReactRailsUJS = {
 
   components: {},
   roots: [],
+
+  // Set default values for options.
+  options: {
+    replaceNull: false,
+  },
 
   // helper method for the mount and unmount methods to find the
   // `data-react-class` DOM elements
@@ -108,7 +114,8 @@ var ReactRailsUJS = {
       var className = node.getAttribute(ujs.CLASS_NAME_ATTR);
       var constructor = ujs.getConstructor(className);
       var propsJson = node.getAttribute(ujs.PROPS_ATTR);
-      var props = propsJson && JSON.parse(propsJson);
+      var props = propsJson && (ujs.options.replaceNull ? replaceNullWithUndefined(JSON.parse(propsJson))
+                                                        : JSON.parse(propsJson));
       var hydrate = node.getAttribute(ujs.RENDER_ATTR);
       var cacheId = node.getAttribute(ujs.CACHE_ID_ATTR);
       var turbolinksPermanent = node.hasAttribute(ujs.TURBOLINKS_PERMANENT_ATTR);
