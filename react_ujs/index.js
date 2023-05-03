@@ -9,7 +9,7 @@ var constructorFromRequireContextWithGlobalFallback = require("./src/getConstruc
 var constructorFromRequireContextsWithGlobalFallback = require("./src/getConstructor/fromRequireContextsWithGlobalFallback")
 var { supportsHydration, reactHydrate, createReactRootLike } = require("./src/renderHelpers")
 var supportsRootApi = require("./src/supportsRootApi")
-var { replaceNullWithUndefined } = require("./src/options")
+var { replaceNullWithUndefined, overwriteOption } = require("./src/options")
 
 var ReactRailsUJS = {
   // This attribute holds the name of component which should be mounted
@@ -37,6 +37,10 @@ var ReactRailsUJS = {
   // Set default values for options.
   options: {
     replaceNull: false,
+  },
+
+  setOptions: function(newOptions) {
+    overwriteOption(ReactRailsUJS.options, newOptions, "replaceNull")
   },
 
   // helper method for the mount and unmount methods to find the
